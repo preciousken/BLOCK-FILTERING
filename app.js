@@ -14,8 +14,7 @@ app.get("/", (req, res) => {
   });
 });
 
-app.get("/getbyhour/:hour", async (req, res) => {
-  const hour = Number(req.params.hour);
+app.get("/get", async (req, res) => {
   try {
     // Loop through each object in the array
     for (const obj of arrayData) {
