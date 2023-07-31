@@ -81,7 +81,7 @@ app.get("/get", async (req, res) => {
 
     // console.log(arrayData);
     function isDesiredTimeFrame(timeFrame) {
-      return /^(0|3|24)\s+Hours\s+Ago$/i.test(timeFrame);
+      return /^(1|3|24)\s+Hours\s+Ago$/i.test(timeFrame);
     }
 
     // Filter the array and return only objects with the desired timeFrame
