@@ -43,6 +43,40 @@ app.get("/getbyhour/:hour", async (req, res) => {
     }
 
     // console.log(arrayData);
+    // Function to convert the date to "1 Hour Ago" format
+    function formatDateToAgo(dateString) {
+      const blockSignedAt = new Date(dateString);
+      const now = new Date();
+      const timeDifference = Math.floor(
+        (now - blockSignedAt) / (1000 * 60 * 60)
+      ); // Time difference in hours
+
+      if (timeDifference === 1) {
+        return "1 Hour Ago";
+      } else {
+        return timeDifference + " Hours Ago";
+      }
+    }
+
+    // Loop through each object in the array
+    for (const obj of arrayData) {
+      // Check if 'log_events' exists and is an array
+      if (obj.log_events && Array.isArray(obj.log_events)) {
+        // Loop through each log_event in the 'log_events' array of the current object
+        for (const logEvent of obj.log_events) {
+          // Check if 'block_signed_at' exists and is a valid date string
+          if (
+            logEvent.block_signed_at &&
+            !isNaN(new Date(logEvent.block_signed_at))
+          ) {
+            // Convert the date to "1 Hour Ago" format and add a new field 'timeFrame'
+            logEvent.timeFrame = formatDateToAgo(logEvent.block_signed_at);
+          }
+        }
+      }
+    }
+
+    console.log(arrayData);
 
     return res.status(200).json({
       status: true,
