@@ -96,11 +96,10 @@ app.get("/get", async (req, res) => {
       return false;
     });
 
-    // console.log(filteredData);
-
     return res.status(200).json({
       status: true,
       data: filteredData,
+      helperLog: arrayData[0].log_events.timeFrame,
     });
   } catch (error) {
     console.log(error);
