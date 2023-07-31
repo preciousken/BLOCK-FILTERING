@@ -40,7 +40,6 @@ app.get("/getbyhour/:hour", async (req, res) => {
 
             // Convert the time frame to milliseconds
             const timeFrameMilliseconds = timeFrameHours * 60 * 60 * 1000;
-
             return timeDifference <= timeFrameMilliseconds;
           });
         }
@@ -50,12 +49,45 @@ app.get("/getbyhour/:hour", async (req, res) => {
 
     // Filter data for different time frames
     const filteredData = filterDataByTimeFrame(response.data, hour);
+
+    const totalSum = filteredData.reduce((acc, item) => {
+      const logEvents = item.log_events;
+
+      // Check if log_events exists and is an array
+      if (Array.isArray(logEvents)) {
+        const eventSum = logEvents.reduce((eventAcc, logEvent) => {
+          const decoded = logEvent.decoded;
+
+          // Check if decoded exists and has the params property
+          if (decoded && Array.isArray(decoded.params)) {
+            const valueParam = decoded.params.find(
+              (param) => param.name === "value"
+            );
+
+            // Check if the valueParam exists and its value can be converted to a number
+            if (valueParam && !isNaN(Number(valueParam.value))) {
+              const value = Number(valueParam.value);
+              return eventAcc + value;
+            }
+          }
+
+          return eventAcc; // If valueParam was not found or was not a valid number, return the current accumulator
+        }, 0);
+
+        return acc + eventSum;
+      }
+
+      return acc; // If logEvents was not found or was not an array, return the current accumulator
+    }, 0);
+
     return res.status(200).json({
       status: true,
       data: filteredData,
       totalReturns: filteredData.length,
+      totalSumOfParamsValue: totalSum,
     });
   } catch (error) {
+    console.log(error);
     return res.json({
       status: false,
       message: "something completely went wrong.",
