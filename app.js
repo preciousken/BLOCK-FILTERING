@@ -1,10 +1,12 @@
 const express = require('express')
 const app = express()
+const axios = require('axios')
 const cors = require('cors')
 const data = require('./data')
 
 app.use(express.json())
 app.use(cors())
+
 
 app.get('/',(req,res)=>{
   return res.status(200).json({
@@ -13,10 +15,13 @@ app.get('/',(req,res)=>{
   })
 })
 
+
 app.get('/getbyhour/:hour',async (req,res)=>{
 
     const hour = Number(req.params.hour)
     try {
+      const apiUrl = 'https://appslk-second.onrender.com/newEndPoint';
+      const response = await axios.get(apiUrl);
            
         function parseISODate(dateString) {
             return new Date(dateString);
@@ -48,7 +53,7 @@ app.get('/getbyhour/:hour',async (req,res)=>{
 
           
           // Filter data for different time frames
-          const filteredData = filterDataByTimeFrame(data, hour);
+          const filteredData = filterDataByTimeFrame(response.data, hour);
           return res.status(200).json({
                         status:true,
                         data:filteredData
