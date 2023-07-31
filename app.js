@@ -14,7 +14,7 @@ app.get('/',(req,res)=>{
     message:"Api fully functional"
   })
 })
-
+//
 
 app.get('/getbyhour/:hour',async (req,res)=>{
 
