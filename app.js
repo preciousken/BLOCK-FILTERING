@@ -6,6 +6,12 @@ const data = require('./data')
 app.use(express.json())
 app.use(cors())
 
+app.get('/',(req,res)=>{
+  return res.status(200).json({
+    status:true,
+    message:"Api fully functional"
+  })
+})
 
 app.get('/getbyhour/:hour',async (req,res)=>{
 
