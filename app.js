@@ -44,7 +44,8 @@ app.get('/getbyhour/:hour',async (req,res)=>{
                   // Convert the time frame to milliseconds
                   const timeFrameMilliseconds = timeFrameHours * 60 * 60 * 1000;
           
-                  return timeDifference <= timeFrameMilliseconds;
+                 // return timeDifference <= timeFrameMilliseconds;
+                 return timeDifference <= timeFrameMilliseconds && >= (timeFrameHours - 1)*60*60*100
                 });
               }
               return false;
