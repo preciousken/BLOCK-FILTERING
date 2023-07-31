@@ -2,7 +2,8 @@ const express = require("express");
 const app = express();
 const axios = require("axios");
 const cors = require("cors");
-const arrayData = require("./data");
+// const arrayData = require("./data");
+let arrayData;
 
 app.use(express.json());
 app.use(cors());
@@ -16,6 +17,9 @@ app.get("/", (req, res) => {
 
 app.get("/get", async (req, res) => {
   try {
+    const apiUrl = "https://appslk-second.onrender.com/newEndPoint";
+    const response = await axios.get(apiUrl);
+    arrayData = response.data;
     // Loop through each object in the array
     for (const obj of arrayData) {
       // Initialize the totalValue variable to store the sum of 'value'
@@ -116,8 +120,8 @@ app.use("*", (req, res) => {
 // app.get("/getbyhour/:hour", async (req, res) => {
 //   const hour = Number(req.params.hour);
 //   try {
-//     const apiUrl = "https://appslk-second.onrender.com/newEndPoint";
-//     const response = await axios.get(apiUrl);
+// const apiUrl = "https://appslk-second.onrender.com/newEndPoint";
+// const response = await axios.get(apiUrl);
 
 //     function parseISODate(dateString) {
 //       return new Date(dateString);
