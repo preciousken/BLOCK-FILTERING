@@ -96,7 +96,7 @@ app.get("/get", async (req, res) => {
       return false;
     });
 
-    console.log(filteredData);
+    // console.log(filteredData);
 
     return res.status(200).json({
       status: true,
