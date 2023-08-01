@@ -49,6 +49,7 @@ app.get("/get", async (req, res) => {
     }
 
     // console.log(arrayData);
+    arrayData2 = arrayData
     // Function to convert the date to "1 Hour Ago" format
     function formatDateToAgo(dateString) {
       const blockSignedAt = new Date(dateString);
@@ -101,7 +102,7 @@ app.get("/get", async (req, res) => {
 
     return res.status(200).json({
       status: true,
-      data: filteredData,
+      data: arrayData2,
     });
   } catch (error) {
     console.log(error);
