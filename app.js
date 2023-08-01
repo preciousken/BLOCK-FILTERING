@@ -4,6 +4,7 @@ const axios = require("axios");
 const cors = require("cors");
 // const arrayData = require("./data");
 let arrayData;
+let originalData;
 
 app.use(express.json());
 app.use(cors());
@@ -20,6 +21,7 @@ app.get("/get", async (req, res) => {
     const apiUrl = "https://appslk-second.onrender.com/newEndPoint";
     const response = await axios.get(apiUrl);
     arrayData = response.data;
+    
     // Loop through each object in the array
     for (const obj of arrayData) {
       // Initialize the totalValue variable to store the sum of 'value'
@@ -98,7 +100,7 @@ app.get("/get", async (req, res) => {
 
     return res.status(200).json({
       status: true,
-      data: arrayData,
+      data: originalData,
       helperLog: arrayData[0].log_events.timeFrame,
     });
   } catch (error) {
