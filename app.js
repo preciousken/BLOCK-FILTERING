@@ -62,6 +62,8 @@ for (const obj of arrayData) {
 
       if (timeDifference === 1) {
         return "1 Hour Ago";
+      }else if(timeDifference === 0) {
+         return "1 Hour Ago";
       } else {
         return timeDifference + " Hours Ago";
          // return "1" + "Hours Ago";
