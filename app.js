@@ -25,37 +25,30 @@ app.get("/get", async (req, res) => {
     originalData = response.data;
     
     // Loop through each object in the array
-    function formatDateToAgo(dateString) {
+    // Function to convert the date to time difference in hours
+function getHoursAgo(dateString) {
   const blockSignedAt = new Date(dateString);
   const now = new Date();
   const timeDifference = Math.floor((now - blockSignedAt) / (1000 * 60 * 60)); // Time difference in hours
-
-  if (timeDifference === 1) {
-    return "1 Hour Ago";
-  } else {
-    return timeDifference + " Hours Ago";
-  }
+  return timeDifference;
 }
 
-function isDesiredTimeFrame(timeFrame) {
-  return /^(1|3|24)\s+Hours\s+Ago$/i.test(timeFrame);
-}
-
-const filteredData = [];
-
-for (const obj of arrayData) {
+// Filter the array and return only objects with the desired timeFrame
+const filteredData = arrayData.filter((obj) => {
   if (obj.log_events && Array.isArray(obj.log_events)) {
     for (const logEvent of obj.log_events) {
       if (logEvent.block_signed_at && !isNaN(new Date(logEvent.block_signed_at))) {
-        logEvent.timeFrame = formatDateToAgo(logEvent.block_signed_at);
-        if (isDesiredTimeFrame(logEvent.timeFrame)) {
-          filteredData.push(obj);
-          break;
+        const timeDifference = getHoursAgo(logEvent.block_signed_at);
+        if ([1, 3, 24].includes(timeDifference)) {
+          return true;
         }
       }
     }
   }
-}
+  return false;
+});
+
+// Now 'filteredData' contains objects with log events that are 1 hour ago, 3 hours ago, and 24 hours ago.
 
 
     return res.status(200).json({
