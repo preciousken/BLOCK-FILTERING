@@ -26,31 +26,81 @@ app.get("/get", async (req, res) => {
     
     // Loop through each object in the array
     // Function to convert the date to time difference in hours
-function getHoursAgo(dateString) {
-  const blockSignedAt = new Date(dateString);
-  const now = new Date();
-  const timeDifference = Math.floor((now - blockSignedAt) / (1000 * 60 * 60)); // Time difference in hours
-  return timeDifference;
-}
+for (const obj of arrayData) {
+      // Initialize the totalValue variable to store the sum of 'value'
+      let totalValue = 0;
 
-// Filter the array and return only objects with the desired timeFrame
-const filteredData = arrayData.filter((obj) => {
-  if (obj.log_events && Array.isArray(obj.log_events)) {
-    for (const logEvent of obj.log_events) {
-      if (logEvent.block_signed_at && !isNaN(new Date(logEvent.block_signed_at))) {
-        const timeDifference = getHoursAgo(logEvent.block_signed_at);
-        if ([1, 3, 24].includes(timeDifference)) {
-          return true;
+      // Check if 'log_events' exists and is an array
+      if (obj.log_events && Array.isArray(obj.log_events)) {
+        // Loop through each log_event in the 'log_events' array of the current object
+        for (const logEvent of obj.log_events) {
+          // Check if 'decoded' and 'params' exist and are arrays
+          if (logEvent.decoded && Array.isArray(logEvent.decoded.params)) {
+            // Loop through the 'params' array and sum the 'value' field
+            for (const param of logEvent.decoded.params) {
+              if (param.name === "value" && !isNaN(Number(param.value))) {
+                totalValue += Number(param.value);
+              }
+            }
+          }
+        }
+      }
+
+      // Add the 'TotalValue' field to the current object
+      obj.TotalParamsValue = totalValue;
+    }
+
+    // console.log(arrayData);
+    arrayData2 = arrayData
+    // Function to convert the date to "1 Hour Ago" format
+    function formatDateToAgo(dateString) {
+      const blockSignedAt = new Date(dateString);
+      const now = new Date();
+      const timeDifference = Math.floor(
+        (now - blockSignedAt) / (1000 * 60 * 60)
+      ); // Time difference in hours
+
+      if (timeDifference === 1) {
+        return "1 Hour Ago";
+      } else {
+        return timeDifference + " Hours Ago";
+      }
+    }
+
+    // Loop through each object in the array
+    for (const obj of arrayData) {
+      // Check if 'log_events' exists and is an array
+      if (obj.log_events && Array.isArray(obj.log_events)) {
+        // Loop through each log_event in the 'log_events' array of the current object
+        for (const logEvent of obj.log_events) {
+          // Check if 'block_signed_at' exists and is a valid date string
+          if (
+            logEvent.block_signed_at &&
+            !isNaN(new Date(logEvent.block_signed_at))
+          ) {
+            // Convert the date to "1 Hour Ago" format and add a new field 'timeFrame'
+            logEvent.timeFrame = formatDateToAgo(logEvent.block_signed_at);
+          }
         }
       }
     }
-  }
-  return false;
-});
 
-// Now 'filteredData' contains objects with log events that are 1 hour ago, 3 hours ago, and 24 hours ago.
+    // console.log(arrayData);
+    function isDesiredTimeFrame(timeFrame) {
+      return /^(1|3|24)\s+Hours\s+Ago$/i.test(timeFrame);
+    }
 
-
+    // Filter the array and return only objects with the desired timeFrame
+    const filteredData = arrayData.filter((obj) => {
+      if (obj.log_events && Array.isArray(obj.log_events)) {
+        for (const logEvent of obj.log_events) {
+          if (logEvent.timeFrame && isDesiredTimeFrame(logEvent.timeFrame)) {
+            return true;
+          }
+        }
+      }
+      return false;
+    });
     return res.status(200).json({
       status: true,
       data: arrayData
