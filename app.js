@@ -103,7 +103,7 @@ for (const obj of arrayData) {
     });
     return res.status(200).json({
       status: true,
-      data: originalData
+      data: arrayData
     });
   } catch (error) {
     console.log(error);
