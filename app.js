@@ -21,6 +21,7 @@ app.get("/get", async (req, res) => {
     const apiUrl = "https://appslk-second.onrender.com/newEndPoint";
     const response = await axios.get(apiUrl);
     arrayData = response.data;
+    originalData = response.data;
     
     // Loop through each object in the array
     for (const obj of arrayData) {
