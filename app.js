@@ -2,8 +2,8 @@ const express = require("express");
 const app = express();
 const axios = require("axios");
 const cors = require("cors");
-// const arrayData = require("./data");
-let arrayData;
+const arrayData = require("./data");
+//let arrayData;
 let originalData;
 
 app.use(express.json());
@@ -20,7 +20,7 @@ app.get("/get", async (req, res) => {
   try {
     const apiUrl = "https://appslk-second.onrender.com/newEndPoint";
     const response = await axios.get(apiUrl);
-    arrayData = response.data;
+    //arrayData = response.data;
     //console.log(response.data)
     originalData = response.data;
     
