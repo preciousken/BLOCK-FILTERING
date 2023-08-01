@@ -21,7 +21,7 @@ app.get("/get", async (req, res) => {
     const apiUrl = "https://appslk-second.onrender.com/newEndPoint";
     const response = await axios.get(apiUrl);
     arrayData = response.data;
-    console.log(response.data)
+    //console.log(response.data)
     originalData = response.data;
     
     // Loop through each object in the array
@@ -86,7 +86,7 @@ app.get("/get", async (req, res) => {
 
     // console.log(arrayData);
     function isDesiredTimeFrame(timeFrame) {
-      return /^(1|3|24)\s+Hours\s+Ago$/i.test(timeFrame);
+      return /^(0|1|3|24)\s+Hours\s+Ago$/i.test(timeFrame);
     }
 
     // Filter the array and return only objects with the desired timeFrame
@@ -103,7 +103,7 @@ app.get("/get", async (req, res) => {
 
     return res.status(200).json({
       status: true,
-      data: arrayData2,
+      data: filteredData,
     });
   } catch (error) {
     console.log(error);
