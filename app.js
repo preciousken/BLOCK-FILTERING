@@ -98,7 +98,7 @@ app.get("/get", async (req, res) => {
 
     return res.status(200).json({
       status: true,
-      data: filteredData,
+      data: arrayData,
       helperLog: arrayData[0].log_events.timeFrame,
     });
   } catch (error) {
